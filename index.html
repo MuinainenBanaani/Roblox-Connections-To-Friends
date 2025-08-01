@@ -10,7 +10,9 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      background: linear-gradient(-45deg, #3a0579, #0f2a56, #3a0579, #0f2a56);
+      background-size: 400% 400%;
+      animation: bgShift 20s ease infinite;
       color: white;
       display: flex;
       flex-direction: column;
@@ -19,15 +21,21 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
-      user-select: none;
-      position: relative;
     }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     h1 {
       font-weight: 600;
       font-size: 3rem;
       margin-bottom: 0.5em;
       text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
+
     p {
       font-weight: 400;
       font-size: 1.25rem;
@@ -35,14 +43,16 @@
       max-width: 500px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
+
     .buttons {
       display: flex;
       gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
     }
+
     .btn {
-      background: rgba(255 255 255 / 0.15);
+      background: rgba(255, 255, 255, 0.15);
       border: 2px solid white;
       border-radius: 12px;
       padding: 1rem 2.5rem;
@@ -54,50 +64,56 @@
       align-items: center;
       gap: 0.75rem;
       transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-      box-shadow: 0 4px 12px rgba(255 255 255 / 0.1);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
       cursor: pointer;
       user-select: none;
     }
+
     .btn:hover {
-      background: rgba(255 255 255 / 0.3);
+      background: rgba(255, 255, 255, 0.3);
       transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(255 255 255 / 0.4);
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.4);
     }
+
     .btn img {
       width: 24px;
       height: 24px;
-      object-fit: contain;
-      filter: none; /* Show icon colors */
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
     }
+
     footer {
       margin-top: 4rem;
-      font-size: 0.9rem;
-      opacity: 0.7;
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0.95;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
-    /* Roblox button top-right corner */
-    .roblox-button {
+
+    /* Roblox Profile Button */
+    .roblox-btn {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
+      top: 18px;
+      right: 18px;
+      width: 60px;
+      height: 60px;
       cursor: pointer;
-      transition: transform 0.2s ease;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255 255 255 / 0.7);
-      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
-    .roblox-button img {
-      width: 36px;
-      height: 36px;
+
+    .roblox-btn img {
+      width: 46px;
+      height: 46px;
       user-select: none;
     }
-    .roblox-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 14px rgba(255 255 255 / 1);
+
+    .roblox-btn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
@@ -110,71 +126,38 @@
     <a
       class="btn"
       href="https://www.paypal.com/paypalme/ToastCatten"
-      data-paypal
-      data-url="https://www.paypal.com/paypalme/ToastCatten"
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label="Donate with PayPal"
     >
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal icon" />
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal Icon" />
       PayPal
     </a>
-    
+
     <!-- Bitcoin Button -->
     <a
       class="btn"
       href="bitcoin:bc1qaa3r2ld5s8x556mpwu2g9wrxk9dnsyajetfcny"
-      data-url="bitcoin:bc1qaa3r2ld5s8x556mpwu2g9wrxk9dnsyajetfcny"
       aria-label="Donate with Bitcoin"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin icon" />
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" />
       Bitcoin
     </a>
   </div>
 
   <footer>Thank you for your support! ❤️</footer>
 
-  <!-- Roblox profile button top right -->
+  <!-- Roblox Profile Button -->
   <a
     href="https://www.roblox.com/users/5309011509/profile"
     target="_blank"
     rel="noopener noreferrer"
-    class="roblox-button"
-    aria-label="Visit my Roblox profile"
+    class="roblox-btn"
+    aria-label="My Roblox Profile"
   >
-    <img src="https://play-lh.googleusercontent.com/7cIIPlWm4m7AGqVpEsIfyL-HW4cQla4ucXnfalMft1TMIYQIlf2vqgmthlZgbNAQoaQ" alt="Roblox logo" />
+    <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Icon" />
   </a>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const buttons = document.querySelectorAll('.btn');
-
-      buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-
-          btn.classList.add('clicked');
-          setTimeout(() => btn.classList.remove('clicked'), 300);
-
-          const url = btn.getAttribute('data-url');
-          if (!url) return;
-
-          if (btn.hasAttribute('data-paypal')) {
-            const width = 600;
-            const height = 700;
-            const left = (window.screen.width / 2) - (width / 2);
-            const top = (window.screen.height / 2) - (height / 2);
-            window.open(
-              url,
-              'PayPalWindow',
-              `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
-            );
-          } else {
-            window.open(url, '_blank', 'noopener,noreferrer');
-          }
-        });
-      });
-    });
-  </script>
 </body>
 </html>
