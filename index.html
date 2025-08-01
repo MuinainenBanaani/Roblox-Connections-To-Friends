@@ -60,10 +60,17 @@
       transform: scale(1.05);
       box-shadow: 0 6px 18px rgba(255 255 255 / 0.4);
     }
-    .btn svg {
+    .btn img {
       width: 24px;
       height: 24px;
-      fill: white;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* optional: invert icon color for white */
+    }
+    /* Click animation */
+    .btn.clicked {
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(255 255 255 / 0.7);
+      transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
     footer {
       margin-top: 4rem;
@@ -81,14 +88,11 @@
     <a
       class="btn"
       href="https://www.paypal.com/paypalme/ToastCatten"
-      target="_blank"
-      rel="noopener noreferrer"
+      data-paypal
+      data-url="https://www.paypal.com/paypalme/ToastCatten"
       aria-label="Donate with PayPal"
     >
-      <!-- PayPal icon (SVG) -->
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7.6 20.3c-1.1 0-2-.9-2-2 0-1.1.8-1.9 1.9-2l3.1-.4c.2 0 .4-.1.5-.3l1-5.8c.1-.5.6-.8 1.1-.8h2c.6 0 1.1.5 1.1 1 0 .6-.5 1-1 1h-1.2l-.9 5.2c-.1.7-.7 1.2-1.4 1.2l-3.2.5zm3.8-9.9-1 5.9h1.2l.8-4.8h.9c.2 0 .4-.2.4-.4 0-.3-.2-.4-.4-.4h-2zm-7.9 5.8c0 2.4 1.8 4.3 4.3 4.3h2.4c.3 0 .6-.2.6-.5l.7-4.3c0-.3-.2-.6-.6-.6H8c-1.1 0-2-.8-2-1.9 0-.5.2-1 .5-1.3l-1-2c-.3-.4-1.1-.3-1.3.3l-.7 4.3z"/>
-      </svg>
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal icon" />
       PayPal
     </a>
     
@@ -96,18 +100,49 @@
     <a
       class="btn"
       href="bitcoin:bc1qaa3r2ld5s8x556mpwu2g9wrxk9dnsyajetfcny"
+      data-url="bitcoin:bc1qaa3r2ld5s8x556mpwu2g9wrxk9dnsyajetfcny"
       aria-label="Donate with Bitcoin"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <!-- Bitcoin icon (SVG) -->
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 0C5.37 0 0 5.372 0 12c0 6.627 5.37 12 12 12s12-5.373 12-12c0-6.628-5.37-12-12-12zm1.664 16.88c-.393 2.578-4.176 1.186-5.566.787l.815-3.268c1.349.319 2.729.628 4.082.941-.22 1.095-.45 2.194-.572 1.54zm.8-4.298c.431-2.062-3.285-1.01-4.448-.82l.792-3.173c1.165.205 2.42.451 3.636.645-.258 1.31-.4 2.604-.653 3.348zM14 11.6c0-1.199-1.07-1.48-2.38-1.7l.528-2.118-1.288-.32-.515 2.07c-.341-.078-.691-.155-1.033-.227l.516-2.072-1.286-.32-.529 2.12-.702-.174-1.178.29.717 2.89s1.264.296 1.239.317c-.673.168-1.354.413-1.9.893-1.008.926-1.425 2.333-1.004 3.673.64 2.06 2.492 2.676 4.67 2.098 2.458-.655 4.347-2.62 4.75-5.82.342-2.508-.18-4.11-2.078-5.086-.74-.39-1.776-.618-2.75-.778l.536-2.15-1.288-.32-.535 2.14c-.344-.08-.695-.16-1.042-.235l.53-2.12-1.29-.32-.534 2.13-.705-.173-1.182.29.724 2.91s1.268.3 1.243.32c-.673.167-1.354.41-1.9.9-1.008.927-1.425 2.337-1.003 3.678.64 2.06 2.493 2.676 4.672 2.095 2.46-.656 4.347-2.63 4.75-5.83.342-2.51-.18-4.11-2.08-5.09z"/>
-      </svg>
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin icon" />
       Bitcoin
     </a>
   </div>
 
   <footer>Thank you for your support! ❤️</footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.btn');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          btn.classList.add('clicked');
+          setTimeout(() => btn.classList.remove('clicked'), 300);
+
+          const url = btn.getAttribute('data-url');
+          if (!url) return;
+
+          if (btn.hasAttribute('data-paypal')) {
+            const width = 600;
+            const height = 700;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            window.open(
+              url,
+              'PayPalWindow',
+              `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+            );
+          } else {
+            // Open other URLs in a new tab
+            window.open(url, '_blank', 'noopener,noreferrer');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
