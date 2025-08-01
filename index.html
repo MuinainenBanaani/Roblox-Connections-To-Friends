@@ -6,6 +6,7 @@
   <title>Donate to Support Me</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -18,6 +19,8 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
+      user-select: none;
+      position: relative;
     }
     h1 {
       font-weight: 600;
@@ -64,18 +67,37 @@
       width: 24px;
       height: 24px;
       object-fit: contain;
-      filter: brightness(0) invert(1); /* optional: invert icon color for white */
-    }
-    /* Click animation */
-    .btn.clicked {
-      transform: scale(0.95);
-      box-shadow: 0 2px 8px rgba(255 255 255 / 0.7);
-      transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      filter: none; /* Show icon colors */
     }
     footer {
       margin-top: 4rem;
       font-size: 0.9rem;
       opacity: 0.7;
+    }
+    /* Roblox button top-right corner */
+    .roblox-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255 255 255 / 0.7);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .roblox-button img {
+      width: 36px;
+      height: 36px;
+      user-select: none;
+    }
+    .roblox-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(255 255 255 / 1);
     }
   </style>
 </head>
@@ -112,6 +134,17 @@
 
   <footer>Thank you for your support! ❤️</footer>
 
+  <!-- Roblox profile button top right -->
+  <a
+    href="https://www.roblox.com/users/5309011509/profile"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="roblox-button"
+    aria-label="Visit my Roblox profile"
+  >
+    <img src="https://play-lh.googleusercontent.com/7cIIPlWm4m7AGqVpEsIfyL-HW4cQla4ucXnfalMft1TMIYQIlf2vqgmthlZgbNAQoaQ" alt="Roblox logo" />
+  </a>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const buttons = document.querySelectorAll('.btn');
@@ -137,7 +170,6 @@
               `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
             );
           } else {
-            // Open other URLs in a new tab
             window.open(url, '_blank', 'noopener,noreferrer');
           }
         });
