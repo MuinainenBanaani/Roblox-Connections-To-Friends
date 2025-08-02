@@ -47,12 +47,31 @@
       user-select: none;
       transition: opacity 0.5s ease;
     }
+    
+    #clickPrompt {
+      font-size: 0.9rem;
+      color: gray;
+      margin-top: -1.5rem;
+      margin-bottom: 2em;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
 
     #clickMeText {
       font-size: 0.9rem;
       color: gray;
       margin-top: 0.15em;
       transition: opacity 0.4s ease;
+    }
+    
+    #funnyText {
+      font-weight: 400;
+      font-size: 1.25rem;
+      margin-bottom: 2em;
+      max-width: 500px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
     .buttons {
@@ -244,8 +263,8 @@
 </head>
 <body>
   <h1>Support My Work</h1>
-  <p id="donationMsg">Feed my coffee addiction one donation at a time.</p>
-  <div id="clickMeText">(click me)</div>
+<p id="funnyText" onclick="changeFunnyText()">Feed my coffee addiction one donation at a time.</p>
+  <div id="clickPrompt">(click me)</div>
 
   <div class="buttons">
     <button class="btn" id="paypalBtn" type="button">
@@ -349,18 +368,18 @@
       "Support the dream — donate today!"
     ];
 
-    const donationMsg = document.getElementById("donationMsg");
-    const clickMe = document.getElementById("clickMeText");
+    let clickPrompt = document.getElementById("clickPrompt");
+    let funnyText = document.getElementById("funnyText");
 
-    donationMsg.addEventListener("click", () => {
-      const randomText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      donationMsg.style.opacity = 0;
-      clickMe.style.opacity = 0;
+    function changeFunnyText() {
+      let newText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      funnyText.style.transform = "scale(0.9)";
       setTimeout(() => {
-        donationMsg.textContent = randomText;
-        donationMsg.style.opacity = 1;
-      }, 400);
-    });
+        funnyText.innerText = newText;
+        funnyText.style.transform = "scale(1)";
+      }, 100);
+      clickPrompt.style.opacity = 0;
+    }
 
     document.getElementById("bitcoinBtn").addEventListener("click", () => {
       document.getElementById("cryptoModal").style.display = "flex";
