@@ -21,7 +21,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
-      overflow-x: hidden;
     }
 
     @keyframes bgShift {
@@ -37,17 +36,23 @@
       text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
-    p {
+    #funnyText {
+      font-weight: 400;
       font-size: 1.25rem;
-      margin-bottom: 0.25em;
+      margin-bottom: 2em;
+      max-width: 500px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
       cursor: pointer;
-      user-select: none;
     }
 
-    #clickMeText {
+    #clickPrompt {
       font-size: 0.9rem;
       color: gray;
-      margin-top: 0.15em;
+      margin-top: -1.5rem;
+      margin-bottom: 2em;
+      opacity: 1;
+      transition: opacity 0.3s ease;
     }
 
     .buttons {
@@ -55,7 +60,6 @@
       gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 1.5rem;
     }
 
     .btn {
@@ -70,164 +74,205 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
       cursor: pointer;
+      user-select: none;
     }
 
     .btn:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.4);
     }
 
-    #btcModal {
+    .btn img {
+      width: 24px;
+      height: 24px;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0.95;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .roblox-btn {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
+      top: 18px;
+      right: 18px;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+      display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
     }
 
-    #btcContent {
-      background: #1c1c1c;
-      padding: 2rem;
-      border-radius: 12px;
-      text-align: center;
-      max-width: 90%;
+    .roblox-btn img {
+      width: 36px;
+      height: 36px;
+      user-select: none;
     }
 
-    #btcOptions, #btcQRView {
-      display: none;
-      flex-direction: column;
-      gap: 1rem;
+    .roblox-btn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
     }
 
-    #btcOptions.show, #btcQRView.show {
-      display: flex;
-    }
-
-    .btcOptionBtn {
-      padding: 0.8rem 1.5rem;
-      background: #292929;
-      border: 2px solid white;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      color: white;
-    }
-
-    .btcOptionBtn:hover {
-      background: #3a3a3a;
-    }
-
-    #btcQR img {
-      width: 220px;
-      margin-bottom: 1rem;
-    }
-
-    .closeModal {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: white;
-    }
-
-    #btcAddrDisplay, #lnAddrDisplay {
-      user-select: all;
-      word-break: break-all;
-      font-family: monospace;
+    #konami {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      color: gray;
       font-size: 0.9rem;
-      margin-top: 0.75rem;
-      background: #111;
-      padding: 8px;
-      border-radius: 6px;
+      text-align: right;
     }
   </style>
 </head>
 <body>
   <h1>Support My Work</h1>
-  <p id="donationMsg">Feed my coffee addiction one donation at a time.</p>
-  <div id="clickMeText">(click me)</div>
+  <p id="funnyText" onclick="changeFunnyText()">Feed my coffee addiction one donation at a time.</p>
+  <div id="clickPrompt">(click me)</div>
 
   <div class="buttons">
-    <a class="btn" id="paypalBtn" href="https://www.paypal.com/paypalme/ToastCatten">
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal Icon" />
+    <a
+      class="btn"
+      href="#"
+      onclick="openPayPalPopup()"
+      aria-label="Donate with PayPal"
+    >
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/main/paypal_icon.png" alt="PayPal Icon" />
       PayPal
     </a>
 
-    <div class="btn" id="bitcoinBtn">
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" />
-      Bitcoin
-    </div>
+    <a
+      class="btn"
+      href="#"
+      onclick="openCryptoModal()"
+      aria-label="Donate with Bitcoin"
+    >
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/main/bitcoin_icon.png" alt="Bitcoin Icon" />
+      Crypto
+    </a>
   </div>
 
-  <div id="btcModal">
-    <div id="btcContent">
-      <div class="closeModal" onclick="btcModal.style.display='none'">&times;</div>
-      <div id="btcOptions" class="show">
-        <button class="btcOptionBtn" onclick="showBTCView('btc')">Pay in Bitcoin</button>
-        <button class="btcOptionBtn" onclick="showBTCView('ln')">Pay in Lightning</button>
-      </div>
+  <footer>Thank you for your support! ❤️</footer>
 
-      <div id="btcQRView">
-        <div id="btcQR"></div>
-        <div id="btcAddrDisplay"></div>
-        <button class="btcOptionBtn" onclick="goBackToOptions()">Back</button>
-      </div>
-    </div>
+  <a
+    href="https://www.roblox.com/users/5309011509/profile"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="roblox-btn"
+    aria-label="My Roblox Profile"
+  >
+    <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Icon" />
+  </a>
+
+  <div id="konami">
+    don't try the konami code<br />
+    (Up, Up, Down, Down, Left, Right, Left, Right, B, A)
   </div>
 
   <script>
-    const btcModal = document.getElementById("btcModal");
-    const btcQR = document.getElementById("btcQR");
-    const btcAddrDisplay = document.getElementById("btcAddrDisplay");
-    const btcOptions = document.getElementById("btcOptions");
-    const btcQRView = document.getElementById("btcQRView");
+    const funnyMessages = [
+      "Feed my coffee addiction one donation at a time.",
+      "Your donation helps me avoid getting a real job.",
+      "Support me or I’ll start charging hugs.",
+      "Help me pay for my internet addiction, thanks!",
+      "Donate now or suffer eternal dad jokes.",
+      "Keep me caffeinated and code-happy — donate below!",
+      "Because even superheroes need pizza money.",
+      "Donations accepted in cookies and bitcoins.",
+      "Make me smile and my bank account too.",
+      "Help fund my next snack break.",
+      "Put your money where my memes are.",
+      "Your support makes me less broke and more awesome.",
+      "Donate or I’ll sing terribly for you.",
+      "Bribe me to keep making cool stuff.",
+      "Every donation counts — even the virtual high fives!",
+      "Sponsor my caffeine-fueled creativity.",
+      "Help me keep the lights on (and the Wi-Fi too).",
+      "Donations = less whining, more creating.",
+      "Your cash could save me from instant ramen dinners.",
+      "Donate and unlock my secret dance moves.",
+      "Support me, and I promise to stop bugging you (maybe).",
+      "Give generously, or face my bad jokes.",
+      "Help me pay for therapy... or pizza.",
+      "Donations make me do happy dances.",
+      "Keep me coding, not couch surfing.",
+      "Help me buy more snacks and less regrets.",
+      "Feed the coder, fuel the dreams.",
+      "Donate now or get bombarded with cat pictures.",
+      "Your support funds my epic snack stash.",
+      "Pay me so I can pay attention.",
+      "Donate or I'll start charging for smiles.",
+      "Help me avoid awkward day jobs.",
+      "Your donations are my motivation fuel.",
+      "I accept donations in hugs, laughs, and coins.",
+      "Donate to keep the creativity flowing (and the lights on).",
+      "Help me keep the server running... and my sanity too.",
+      "Donate and I’ll tell you a secret joke.",
+      "Your donation is my ‘keep going’ potion.",
+      "Support me and my collection of novelty socks.",
+      "Help me fund my ‘work from home in pajamas’ lifestyle.",
+      "Donate now — it’s cheaper than therapy.",
+      "Give me money, and I’ll give you gratitude.",
+      "Help me upgrade from instant noodles to fancy ramen.",
+      "Support me before my coffee runs out!",
+      "Your donations keep me fueled and funny.",
+      "Sponsor me and get exclusive bad jokes.",
+      "Donate or I’ll start charging you in dad jokes.",
+      "Help keep me weird and wonderful.",
+      "Give a little, get a lot of thanks (and memes).",
+      "Support the dream — donate today!"
+    ];
 
-    const btcAddress = "bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr";
-    const lnAddress = "lnbc1p5gmeyvpp5uye35uglws0t3ggfaunv0qmvkw67ww4mg73f9r2trxq6n7jz2reqdqqcqzzsxqzjcsp5wkvwfk8jju2ntekt2puea9s7wutkc4unqy06tcz864dqs3rgqczq9qxpqysgqze75kd4vl4udzpv4e4pj8ngzexw5q589y86dw6c4jhr2kugys3rz6e4ygry2yrcayd0k29ux5nzlulr3kfh5aqf6mu49avyu5kvq4ggqwtgcrh";
+    let clickPrompt = document.getElementById("clickPrompt");
+    let funnyText = document.getElementById("funnyText");
 
-    document.getElementById("bitcoinBtn").addEventListener("click", () => {
-      btcModal.style.display = "flex";
-      goBackToOptions();
-    });
-
-    function showBTCView(type) {
-      const qrUrl = type === "btc"
-        ? "https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_130936103.png?raw=true"
-        : "https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_131036264.png?raw=true";
-
-      const address = type === "btc" ? btcAddress : lnAddress;
-
-      btcQR.innerHTML = `<img src="${qrUrl}" alt="${type === 'btc' ? 'BTC' : 'Lightning'} QR Code" />`;
-      btcAddrDisplay.textContent = address;
-
-      btcOptions.classList.remove("show");
-      btcQRView.classList.add("show");
+    function changeFunnyText() {
+      let newText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      funnyText.style.transform = "scale(0.9)";
+      setTimeout(() => {
+        funnyText.innerText = newText;
+        funnyText.style.transform = "scale(1)";
+      }, 100);
+      clickPrompt.style.opacity = 0;
     }
 
-    function goBackToOptions() {
-      btcOptions.classList.add("show");
-      btcQRView.classList.remove("show");
+    function openPayPalPopup() {
+      const url = "https://www.paypal.com/paypalme/ToastCatten";
+      const w = 600, h = 700;
+      const left = (screen.width - w) / 2;
+      const top = (screen.height - h) / 2;
+      window.open(url, "_blank", `width=${w},height=${h},top=${top},left=${left}`);
     }
 
-    // PayPal popup centering
-    document.getElementById("paypalBtn").addEventListener("click", function(e) {
-      e.preventDefault();
-      const w = 500, h = 600;
-      const dualScreenLeft = window.screenLeft ?? screen.left;
-      const dualScreenTop = window.screenTop ?? screen.top;
-      const width = window.innerWidth ?? document.documentElement.clientWidth ?? screen.width;
-      const height = window.innerHeight ?? document.documentElement.clientHeight ?? screen.height;
-      const left = (width - w) / 2 + dualScreenLeft;
-      const top = (height - h) / 2 + dualScreenTop;
-      const win = window.open(this.href, "paypalPopup", `scrollbars=yes,width=${w},height=${h},top=${top},left=${left}`);
-      if (win?.focus) win.focus();
+    // Add your crypto modal and copy logic here...
+
+    // Konami Code Easter Egg
+    const konami = [38,38,40,40,37,39,37,39,66,65];
+    let kIndex = 0;
+    document.addEventListener("keydown", e => {
+      if (e.keyCode === konami[kIndex]) {
+        kIndex++;
+        if (kIndex === konami.length) {
+          let audio = new Audio("https://freesound.org/data/previews/608/608639_1648170-lq.mp3");
+          audio.play();
+          alert("BOO!");
+          kIndex = 0;
+        }
+      } else {
+        kIndex = 0;
+      }
     });
   </script>
 </body>
