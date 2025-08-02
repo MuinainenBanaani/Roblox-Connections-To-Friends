@@ -21,6 +21,8 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
+      position: relative;
+      overflow-x: hidden;
     }
 
     @keyframes bgShift {
@@ -36,23 +38,26 @@
       text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
-    #funnyText {
+    p {
       font-weight: 400;
       font-size: 1.25rem;
-      margin-bottom: 2em;
+      margin-bottom: 0.25em;
       max-width: 500px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease;
       cursor: pointer;
+      user-select: none;
+      position: relative;
+      display: inline-block;
+      transition: transform 0.2s ease;
     }
 
-    #clickPrompt {
+    #clickMeText {
       font-size: 0.9rem;
       color: gray;
-      margin-top: -1.5rem;
-      margin-bottom: 2em;
       opacity: 1;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
+      user-select: none;
+      margin-top: 0.15em;
     }
 
     .buttons {
@@ -60,6 +65,7 @@
       gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 1.5rem;
     }
 
     .btn {
@@ -100,180 +106,202 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
-    .roblox-btn {
+    /* Roblox Icon */
+    #roblox-icon-link {
       position: fixed;
-      top: 18px;
-      right: 18px;
+      top: 15px;
+      right: 15px;
+      z-index: 9999;
+      border-radius: 12px;
+      overflow: hidden;
       width: 50px;
       height: 50px;
-      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+
+    #roblox-icon-link:hover {
+      transform: scale(1.08);
+    }
+
+    #roblox-icon {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background: white;
-      display: flex;
+    }
+
+    /* Modal */
+    #cryptoModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(10, 10, 30, 0.95);
+      display: none;
       justify-content: center;
       align-items: center;
+      z-index: 10000;
     }
 
-    .roblox-btn img {
-      width: 36px;
-      height: 36px;
-      user-select: none;
+    #cryptoContent {
+      background: linear-gradient(145deg, #1b1b40, #252562);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      color: white;
     }
 
-    .roblox-btn:hover {
-      transform: scale(1.15);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+    .crypto-section {
+      display: none;
     }
 
-    #konami {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      color: gray;
+    .crypto-section.active {
+      display: block;
+    }
+
+    .crypto-option {
+      margin: 1rem 0;
+      padding: 12px 20px;
+      background: #ffffff10;
+      border: 1px solid #ffffff33;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .crypto-option:hover {
+      background: #ffffff22;
+    }
+
+    .address-copy {
+      margin: 1rem 0;
+      background: #ffffff22;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      background: #ffffff33;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      margin-top: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #ffffff55;
+      transform: scale(1.05);
+    }
+
+    .crypto-qr {
+      margin-top: 15px;
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 10px;
+    }
+
+    .close-modal {
+      margin-top: 1rem;
+      background: transparent;
+      color: #bbb;
+      border: none;
+      cursor: pointer;
       font-size: 0.9rem;
-      text-align: right;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <h1>Support My Work</h1>
-  <p id="funnyText" onclick="changeFunnyText()">Feed my coffee addiction one donation at a time.</p>
-  <div id="clickPrompt">(click me)</div>
+  <p id="donationMsg">Feed my coffee addiction one donation at a time.</p>
+  <div id="clickMeText">(click me)</div>
 
   <div class="buttons">
-    <a
-      class="btn"
-      href="#"
-      onclick="openPayPalPopup()"
-      aria-label="Donate with PayPal"
-    >
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/main/paypal_icon.png" alt="PayPal Icon" />
+    <a class="btn" id="paypalBtn" href="https://www.paypal.com/paypalme/ToastCatten">
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal Icon" />
       PayPal
     </a>
 
-    <a
-      class="btn"
-      href="#"
-      onclick="openCryptoModal()"
-      aria-label="Donate with Bitcoin"
-    >
-      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/main/bitcoin_icon.png" alt="Bitcoin Icon" />
-      Crypto
+    <a class="btn" id="bitcoinBtn">
+      <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" />
+      Bitcoin
     </a>
   </div>
 
   <footer>Thank you for your support! ❤️</footer>
 
-  <a
-    href="https://www.roblox.com/users/5309011509/profile"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="roblox-btn"
-    aria-label="My Roblox Profile"
-  >
-    <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Icon" />
+  <!-- Roblox Icon -->
+  <a href="https://www.roblox.com/users/5309011509/profile" target="_blank" id="roblox-icon-link">
+    <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Profile" id="roblox-icon" />
   </a>
 
-  <div id="konami">
-    don't try the konami code<br />
-    (Up, Up, Down, Down, Left, Right, Left, Right, B, A)
+  <!-- Crypto Modal -->
+  <div id="cryptoModal">
+    <div id="cryptoContent">
+      <div id="cryptoMain" class="crypto-section active">
+        <h2>Choose Payment Type</h2>
+        <div class="crypto-option" onclick="switchCrypto('btc')">Pay in BTC</div>
+        <div class="crypto-option" onclick="switchCrypto('lightning')">Pay in BTC Lightning</div>
+        <button class="close-modal" onclick="closeCryptoModal()">Cancel</button>
+      </div>
+
+      <div id="cryptoBTC" class="crypto-section">
+        <h2>BTC Address</h2>
+        <div class="address-copy" id="btcAddress">bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr</div>
+        <button class="copy-btn" onclick="copyAddress('btc')">Copy BTC Address</button>
+        <img class="crypto-qr" src="https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_130936103.png?raw=true" alt="BTC QR">
+        <button class="close-modal" onclick="closeCryptoModal()">Back</button>
+      </div>
+
+      <div id="cryptoLightning" class="crypto-section">
+        <h2>Lightning Address</h2>
+        <div class="address-copy" id="lightningAddress">
+          lnbc1p5gmeyvpp5uye35uglws0t3ggfaunv0qmvkw67ww4mg73f9r2trxq6n7jz2reqdqqcqzzsxqzjcsp5wkvwfk8jju2ntekt2puea9s7wutkc4unqy06tcz864dqs3rgqczq9qxpqysgqze75kd4vl4udzpv4e4pj8ngzexw5q589y86dw6c4jhr2kugys3rz6e4ygry2yrcayd0k29ux5nzlulr3kfh5aqf6mu49avyu5kvq4ggqwtgcrh
+        </div>
+        <button class="copy-btn" onclick="copyAddress('lightning')">Copy Lightning Address</button>
+        <img class="crypto-qr" src="https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_131036264.png?raw=true" alt="Lightning QR">
+        <button class="close-modal" onclick="closeCryptoModal()">Back</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const funnyMessages = [
-      "Feed my coffee addiction one donation at a time.",
-      "Your donation helps me avoid getting a real job.",
-      "Support me or I’ll start charging hugs.",
-      "Help me pay for my internet addiction, thanks!",
-      "Donate now or suffer eternal dad jokes.",
-      "Keep me caffeinated and code-happy — donate below!",
-      "Because even superheroes need pizza money.",
-      "Donations accepted in cookies and bitcoins.",
-      "Make me smile and my bank account too.",
-      "Help fund my next snack break.",
-      "Put your money where my memes are.",
-      "Your support makes me less broke and more awesome.",
-      "Donate or I’ll sing terribly for you.",
-      "Bribe me to keep making cool stuff.",
-      "Every donation counts — even the virtual high fives!",
-      "Sponsor my caffeine-fueled creativity.",
-      "Help me keep the lights on (and the Wi-Fi too).",
-      "Donations = less whining, more creating.",
-      "Your cash could save me from instant ramen dinners.",
-      "Donate and unlock my secret dance moves.",
-      "Support me, and I promise to stop bugging you (maybe).",
-      "Give generously, or face my bad jokes.",
-      "Help me pay for therapy... or pizza.",
-      "Donations make me do happy dances.",
-      "Keep me coding, not couch surfing.",
-      "Help me buy more snacks and less regrets.",
-      "Feed the coder, fuel the dreams.",
-      "Donate now or get bombarded with cat pictures.",
-      "Your support funds my epic snack stash.",
-      "Pay me so I can pay attention.",
-      "Donate or I'll start charging for smiles.",
-      "Help me avoid awkward day jobs.",
-      "Your donations are my motivation fuel.",
-      "I accept donations in hugs, laughs, and coins.",
-      "Donate to keep the creativity flowing (and the lights on).",
-      "Help me keep the server running... and my sanity too.",
-      "Donate and I’ll tell you a secret joke.",
-      "Your donation is my ‘keep going’ potion.",
-      "Support me and my collection of novelty socks.",
-      "Help me fund my ‘work from home in pajamas’ lifestyle.",
-      "Donate now — it’s cheaper than therapy.",
-      "Give me money, and I’ll give you gratitude.",
-      "Help me upgrade from instant noodles to fancy ramen.",
-      "Support me before my coffee runs out!",
-      "Your donations keep me fueled and funny.",
-      "Sponsor me and get exclusive bad jokes.",
-      "Donate or I’ll start charging you in dad jokes.",
-      "Help keep me weird and wonderful.",
-      "Give a little, get a lot of thanks (and memes).",
-      "Support the dream — donate today!"
-    ];
-
-    let clickPrompt = document.getElementById("clickPrompt");
-    let funnyText = document.getElementById("funnyText");
-
-    function changeFunnyText() {
-      let newText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      funnyText.style.transform = "scale(0.9)";
-      setTimeout(() => {
-        funnyText.innerText = newText;
-        funnyText.style.transform = "scale(1)";
-      }, 100);
-      clickPrompt.style.opacity = 0;
-    }
-
-    function openPayPalPopup() {
-      const url = "https://www.paypal.com/paypalme/ToastCatten";
-      const w = 600, h = 700;
-      const left = (screen.width - w) / 2;
-      const top = (screen.height - h) / 2;
-      window.open(url, "_blank", `width=${w},height=${h},top=${top},left=${left}`);
-    }
-
-    // Add your crypto modal and copy logic here...
-
-    // Konami Code Easter Egg
-    const konami = [38,38,40,40,37,39,37,39,66,65];
-    let kIndex = 0;
-    document.addEventListener("keydown", e => {
-      if (e.keyCode === konami[kIndex]) {
-        kIndex++;
-        if (kIndex === konami.length) {
-          let audio = new Audio("https://freesound.org/data/previews/608/608639_1648170-lq.mp3");
-          audio.play();
-          alert("BOO!");
-          kIndex = 0;
-        }
-      } else {
-        kIndex = 0;
-      }
+    const bitcoinBtn = document.getElementById("bitcoinBtn");
+    bitcoinBtn.addEventListener("click", () => {
+      document.getElementById("cryptoModal").style.display = "flex";
+      switchCrypto('main');
     });
+
+    function closeCryptoModal() {
+      document.getElementById("cryptoModal").style.display = "none";
+    }
+
+    function switchCrypto(type) {
+      document.querySelectorAll(".crypto-section").forEach(s => s.classList.remove("active"));
+      if (type === 'main') document.getElementById("cryptoMain").classList.add("active");
+      if (type === 'btc') document.getElementById("cryptoBTC").classList.add("active");
+      if (type === 'lightning') document.getElementById("cryptoLightning").classList.add("active");
+    }
+
+    function copyAddress(type) {
+      const addr = type === "btc" ? "bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr" :
+        "lnbc1p5gmeyvpp5uye35uglws0t3ggfaunv0qmvkw67ww4mg73f9r2trxq6n7jz2reqdqqcqzzsxqzjcsp5wkvwfk8jju2ntekt2puea9s7wutkc4unqy06tcz864dqs3rgqczq9qxpqysgqze75kd4vl4udzpv4e4pj8ngzexw5q589y86dw6c4jhr2kugys3rz6e4ygry2yrcayd0k29ux5nzlulr3kfh5aqf6mu49avyu5kvq4ggqwtgcrh";
+      navigator.clipboard.writeText(addr).then(() => alert("Address copied!"));
+    }
   </script>
 </body>
 </html>
