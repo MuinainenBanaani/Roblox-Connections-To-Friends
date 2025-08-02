@@ -21,7 +21,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
-      position: relative;
       overflow-x: hidden;
     }
 
@@ -46,18 +45,18 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       cursor: pointer;
       user-select: none;
-      position: relative;
-      display: inline-block;
       transition: transform 0.2s ease;
+    }
+
+    p:hover {
+      transform: scale(1.02);
     }
 
     #clickMeText {
       font-size: 0.9rem;
       color: gray;
-      opacity: 1;
-      transition: opacity 0.4s ease;
-      user-select: none;
       margin-top: 0.15em;
+      transition: opacity 0.5s ease;
     }
 
     .buttons {
@@ -106,7 +105,6 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
-    /* Roblox Icon */
     #roblox-icon-link {
       position: fixed;
       top: 15px;
@@ -145,6 +143,11 @@
       z-index: 10000;
     }
 
+    #cryptoModal.show #cryptoContent {
+      transform: scale(1);
+      opacity: 1;
+    }
+
     #cryptoContent {
       background: linear-gradient(145deg, #1b1b40, #252562);
       border-radius: 16px;
@@ -154,6 +157,9 @@
       width: 90%;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       color: white;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
     }
 
     .crypto-section {
@@ -184,7 +190,7 @@
       padding: 10px;
       border-radius: 8px;
       font-family: monospace;
-      word-break: break-all;
+      word-break: break-word;
     }
 
     .copy-btn {
@@ -223,6 +229,13 @@
       font-size: 0.9rem;
       text-decoration: underline;
     }
+
+    @media (max-width: 500px) {
+      #cryptoContent {
+        padding: 20px;
+        width: 95%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -231,29 +244,28 @@
   <div id="clickMeText">(click me)</div>
 
   <div class="buttons">
-    <a class="btn" id="paypalBtn" href="https://www.paypal.com/paypalme/ToastCatten">
+    <button class="btn" id="paypalBtn" type="button">
       <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/paypal_icon.png" alt="PayPal Icon" />
       PayPal
-    </a>
+    </button>
 
-    <a class="btn" id="bitcoinBtn">
+    <button class="btn" id="bitcoinBtn" type="button">
       <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" />
       Bitcoin
-    </a>
+    </button>
   </div>
 
   <footer>Thank you for your support! ❤️</footer>
 
-  <!-- Roblox Icon -->
   <a href="https://www.roblox.com/users/5309011509/profile" target="_blank" id="roblox-icon-link">
     <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Profile" id="roblox-icon" />
   </a>
 
   <!-- Crypto Modal -->
-  <div id="cryptoModal">
+  <div id="cryptoModal" role="dialog" aria-modal="true" aria-labelledby="cryptoModalLabel">
     <div id="cryptoContent">
       <div id="cryptoMain" class="crypto-section active">
-        <h2>Choose Payment Type</h2>
+        <h2 id="cryptoModalLabel">Choose Payment Type</h2>
         <div class="crypto-option" onclick="switchCrypto('btc')">Pay in BTC</div>
         <div class="crypto-option" onclick="switchCrypto('lightning')">Pay in BTC Lightning</div>
         <button class="close-modal" onclick="closeCryptoModal()">Cancel</button>
@@ -264,7 +276,7 @@
         <div class="address-copy" id="btcAddress">bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr</div>
         <button class="copy-btn" onclick="copyAddress('btc')">Copy BTC Address</button>
         <img class="crypto-qr" src="https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_130936103.png?raw=true" alt="BTC QR">
-        <button class="close-modal" onclick="closeCryptoModal()">Back</button>
+        <button class="close-modal" onclick="switchCrypto('main')">Back</button>
       </div>
 
       <div id="cryptoLightning" class="crypto-section">
@@ -274,20 +286,56 @@
         </div>
         <button class="copy-btn" onclick="copyAddress('lightning')">Copy Lightning Address</button>
         <img class="crypto-qr" src="https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_131036264.png?raw=true" alt="Lightning QR">
-        <button class="close-modal" onclick="closeCryptoModal()">Back</button>
+        <button class="close-modal" onclick="switchCrypto('main')">Back</button>
       </div>
     </div>
   </div>
 
   <script>
-    const bitcoinBtn = document.getElementById("bitcoinBtn");
-    bitcoinBtn.addEventListener("click", () => {
+    const messages = [
+      "Feed my coffee addiction one donation at a time.",
+      "Your donation fuels my keyboard smashing.",
+      "Every cent prevents me from eating instant noodles.",
+      "Donating here makes you 78% cooler. Science said so.",
+      "Support me and unlock +1 karma in real life.",
+      "Just imagine how happy I’ll be if you donate 😎",
+      "Give money. Get pixels. Everyone wins.",
+      "Donations = fewer ads (not really, but sounds nice)."
+    ];
+
+    const donationMsg = document.getElementById("donationMsg");
+    const clickHint = document.getElementById("clickMeText");
+
+    donationMsg.addEventListener("click", () => {
+      let newMsg;
+      do {
+        newMsg = messages[Math.floor(Math.random() * messages.length)];
+      } while (newMsg === donationMsg.textContent);
+      donationMsg.textContent = newMsg;
+      clickHint.style.opacity = 0;
+    });
+
+    document.getElementById("bitcoinBtn").addEventListener("click", () => {
       document.getElementById("cryptoModal").style.display = "flex";
+      document.getElementById("cryptoModal").classList.add("show");
       switchCrypto('main');
+    });
+
+    document.getElementById("paypalBtn").addEventListener("click", () => {
+      const width = 500;
+      const height = 700;
+      const left = (window.innerWidth - width) / 2 + window.screenX;
+      const top = (window.innerHeight - height) / 2 + window.screenY;
+      window.open(
+        "https://www.paypal.com/paypalme/ToastCatten",
+        "paypalWindow",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
     });
 
     function closeCryptoModal() {
       document.getElementById("cryptoModal").style.display = "none";
+      document.getElementById("cryptoModal").classList.remove("show");
     }
 
     function switchCrypto(type) {
@@ -298,9 +346,22 @@
     }
 
     function copyAddress(type) {
-      const addr = type === "btc" ? "bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr" :
-        "lnbc1p5gmeyvpp5uye35uglws0t3ggfaunv0qmvkw67ww4mg73f9r2trxq6n7jz2reqdqqcqzzsxqzjcsp5wkvwfk8jju2ntekt2puea9s7wutkc4unqy06tcz864dqs3rgqczq9qxpqysgqze75kd4vl4udzpv4e4pj8ngzexw5q589y86dw6c4jhr2kugys3rz6e4ygry2yrcayd0k29ux5nzlulr3kfh5aqf6mu49avyu5kvq4ggqwtgcrh";
-      navigator.clipboard.writeText(addr).then(() => alert("Address copied!"));
+      const address = type === "btc"
+        ? document.getElementById("btcAddress").textContent
+        : document.getElementById("lightningAddress").textContent;
+      const btn = type === "btc" 
+        ? document.querySelector('[onclick*="btc"]') 
+        : document.querySelector('[onclick*="lightning"]');
+      const originalText = btn.textContent;
+
+      navigator.clipboard.writeText(address).then(() => {
+        btn.textContent = "Copied Wallet Address!";
+        btn.disabled = true;
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }, 2000);
+      });
     }
   </script>
 </body>
