@@ -45,18 +45,14 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       cursor: pointer;
       user-select: none;
-      transition: transform 0.2s ease;
-    }
-
-    p:hover {
-      transform: scale(1.02);
+      transition: opacity 0.5s ease;
     }
 
     #clickMeText {
       font-size: 0.9rem;
       color: gray;
       margin-top: 0.15em;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.4s ease;
     }
 
     .buttons {
@@ -194,18 +190,18 @@
     }
 
     .copy-btn {
-      background: #ffffff33;
+      background: linear-gradient(to right, #3a0579, #0f2a56);
       color: white;
       border: none;
-      padding: 8px 14px;
+      padding: 8px 16px;
       margin-top: 10px;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s;
+      transition: all 0.3s ease;
     }
 
     .copy-btn:hover {
-      background: #ffffff55;
+      background: linear-gradient(to right, #0f2a56, #3a0579);
       transform: scale(1.05);
     }
 
@@ -222,12 +218,20 @@
 
     .close-modal {
       margin-top: 1rem;
-      background: transparent;
+      background: none;
       color: #bbb;
-      border: none;
+      border: 2px solid #666;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 0.9rem;
-      text-decoration: underline;
+      transition: 0.3s;
+    }
+
+    .close-modal:hover {
+      color: white;
+      border-color: white;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     @media (max-width: 500px) {
@@ -268,7 +272,7 @@
         <h2 id="cryptoModalLabel">Choose Payment Type</h2>
         <div class="crypto-option" onclick="switchCrypto('btc')">Pay in BTC</div>
         <div class="crypto-option" onclick="switchCrypto('lightning')">Pay in BTC Lightning</div>
-        <button class="close-modal" onclick="closeCryptoModal()">Cancel</button>
+        <button class="close-modal" onclick="closeCryptoModal()">Close</button>
       </div>
 
       <div id="cryptoBTC" class="crypto-section">
@@ -292,45 +296,35 @@
   </div>
 
   <script>
-    const messages = [
-      "Feed my coffee addiction one donation at a time.",
-      "Your donation fuels my keyboard smashing.",
-      "Every cent prevents me from eating instant noodles.",
-      "Donating here makes you 78% cooler. Science said so.",
-      "Support me and unlock +1 karma in real life.",
-      "Just imagine how happy I’ll be if you donate 😎",
-      "Give money. Get pixels. Everyone wins.",
-      "Donations = fewer ads (not really, but sounds nice)."
+    const funnyMessages = [
+      "Every coin flip lands on heads now.",
+      "I’ll use this to buy imaginary coffee.",
+      "You just powered my hamster wheel server.",
+      "Donation detected. Sanity increased by 3.",
+      "I’m not crying. You’re donating!",
+      "Support today, memes tomorrow.",
+      "Fueled by donations and bad decisions.",
+      "You’ve leveled up my caffeine bar!",
+      "Your kindness just made my day."
     ];
 
     const donationMsg = document.getElementById("donationMsg");
-    const clickHint = document.getElementById("clickMeText");
+    const clickMe = document.getElementById("clickMeText");
 
     donationMsg.addEventListener("click", () => {
-      let newMsg;
-      do {
-        newMsg = messages[Math.floor(Math.random() * messages.length)];
-      } while (newMsg === donationMsg.textContent);
-      donationMsg.textContent = newMsg;
-      clickHint.style.opacity = 0;
+      const randomText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      donationMsg.style.opacity = 0;
+      clickMe.style.opacity = 0;
+      setTimeout(() => {
+        donationMsg.textContent = randomText;
+        donationMsg.style.opacity = 1;
+      }, 400);
     });
 
     document.getElementById("bitcoinBtn").addEventListener("click", () => {
       document.getElementById("cryptoModal").style.display = "flex";
       document.getElementById("cryptoModal").classList.add("show");
       switchCrypto('main');
-    });
-
-    document.getElementById("paypalBtn").addEventListener("click", () => {
-      const width = 500;
-      const height = 700;
-      const left = (window.innerWidth - width) / 2 + window.screenX;
-      const top = (window.innerHeight - height) / 2 + window.screenY;
-      window.open(
-        "https://www.paypal.com/paypalme/ToastCatten",
-        "paypalWindow",
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-      );
     });
 
     function closeCryptoModal() {
@@ -346,12 +340,10 @@
     }
 
     function copyAddress(type) {
-      const address = type === "btc"
-        ? document.getElementById("btcAddress").textContent
-        : document.getElementById("lightningAddress").textContent;
-      const btn = type === "btc" 
-        ? document.querySelector('[onclick*="btc"]') 
-        : document.querySelector('[onclick*="lightning"]');
+      const address = document.getElementById(type === "btc" ? "btcAddress" : "lightningAddress").textContent.trim();
+      const btn = type === "btc"
+        ? document.querySelector('[onclick*="copyAddress(\'btc\')"]')
+        : document.querySelector('[onclick*="copyAddress(\'lightning\')"]');
       const originalText = btn.textContent;
 
       navigator.clipboard.writeText(address).then(() => {
@@ -363,6 +355,18 @@
         }, 2000);
       });
     }
+
+    document.getElementById("paypalBtn").addEventListener("click", () => {
+      const width = 500;
+      const height = 700;
+      const left = (window.innerWidth - width) / 2 + window.screenX;
+      const top = (window.innerHeight - height) / 2 + window.screenY;
+      window.open(
+        "https://www.paypal.com/paypalme/ToastCatten",
+        "paypalWindow",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
+    });
   </script>
 </body>
 </html>
