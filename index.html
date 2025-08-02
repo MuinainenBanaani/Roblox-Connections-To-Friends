@@ -21,7 +21,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
-      position: relative;
       overflow-x: hidden;
     }
 
@@ -39,24 +38,15 @@
     }
 
     p {
-      font-weight: 400;
       font-size: 1.25rem;
       margin-bottom: 0.25em;
-      max-width: 500px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       cursor: pointer;
       user-select: none;
-      position: relative;
-      display: inline-block;
-      transition: transform 0.2s ease;
     }
 
     #clickMeText {
       font-size: 0.9rem;
       color: gray;
-      opacity: 1;
-      transition: opacity 0.4s ease;
-      user-select: none;
       margin-top: 0.15em;
     }
 
@@ -80,104 +70,82 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
       cursor: pointer;
-      user-select: none;
     }
 
     .btn:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.4);
     }
 
-    .btn img {
-      width: 24px;
-      height: 24px;
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
-    }
-
-    footer {
-      margin-top: 4rem;
-      font-size: 1.1rem;
-      font-weight: 500;
-      opacity: 0.95;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    .roblox-btn {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      width: 66px;
-      height: 66px;
-      cursor: pointer;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .roblox-btn img {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      transform: scale(1.3);
-      border-radius: 12px;
-    }
-
-    .roblox-btn:hover {
-      transform: scale(1.15);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
-    }
-
-    #konamiContainer {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      text-align: right;
-      font-size: 0.85rem;
-      color: gray;
-      user-select: none;
-      max-width: 250px;
-      line-height: 1.3;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    }
-
-    #konamiCodeText {
-      font-family: monospace;
-      margin-top: 4px;
-      color: #ccc;
-      font-size: 0.9rem;
-    }
-
-    #jumpscareOverlay {
+    #btcModal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: gray;
-      opacity: 0.9;
-      z-index: 9999;
-      display: flex;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      color: white;
-      font-size: 4rem;
-      font-weight: 900;
+      z-index: 1000;
+    }
+
+    #btcContent {
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 12px;
       text-align: center;
-      user-select: none;
-      pointer-events: none;
-      text-shadow:
-        0 0 8px black,
-        0 0 15px black,
-        0 0 20px black;
+      max-width: 90%;
+    }
+
+    #btcOptions, #btcQRView {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #btcOptions.show, #btcQRView.show {
+      display: flex;
+    }
+
+    .btcOptionBtn {
+      padding: 0.8rem 1.5rem;
+      background: #292929;
+      border: 2px solid white;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btcOptionBtn:hover {
+      background: #3a3a3a;
+    }
+
+    #btcQR img {
+      width: 220px;
+      margin-bottom: 1rem;
+    }
+
+    .closeModal {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    #btcAddrDisplay, #lnAddrDisplay {
+      user-select: all;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      background: #111;
+      padding: 8px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -192,132 +160,63 @@
       PayPal
     </a>
 
-    <a class="btn" id="bitcoinBtn">
+    <div class="btn" id="bitcoinBtn">
       <img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" />
       Bitcoin
-    </a>
+    </div>
   </div>
 
-  <footer>Thank you for your support! ❤️</footer>
+  <div id="btcModal">
+    <div id="btcContent">
+      <div class="closeModal" onclick="btcModal.style.display='none'">&times;</div>
+      <div id="btcOptions" class="show">
+        <button class="btcOptionBtn" onclick="showBTCView('btc')">Pay in Bitcoin</button>
+        <button class="btcOptionBtn" onclick="showBTCView('ln')">Pay in Lightning</button>
+      </div>
 
-  <a href="https://www.roblox.com/users/5309011509/profile" target="_blank" class="roblox-btn">
-    <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Icon" />
-  </a>
-
-  <div id="konamiContainer">
-    <div>don't try the konami code</div>
-    <div id="konamiCodeText">(Up, Up, Down, Down, Left, Right, Left, Right, B, A)</div>
+      <div id="btcQRView">
+        <div id="btcQR"></div>
+        <div id="btcAddrDisplay"></div>
+        <button class="btcOptionBtn" onclick="goBackToOptions()">Back</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const messages = [
-      "Feed my coffee addiction one donation at a time.",
-      "Your donation helps me avoid getting a real job.",
-      "Support me or I’ll start charging hugs.",
-      "Help me pay for my internet addiction, thanks!",
-      "Donate now or suffer eternal dad jokes.",
-      "Keep me caffeinated and code-happy — donate below!",
-      "Because even superheroes need pizza money.",
-      "Donations accepted in cookies and bitcoins.",
-      "Make me smile and my bank account too.",
-      "Help fund my next snack break.",
-      "Put your money where my memes are.",
-      "Your support makes me less broke and more awesome.",
-      "Donate or I’ll sing terribly for you.",
-      "Bribe me to keep making cool stuff.",
-      "Every donation counts — even the virtual high fives!",
-      "Sponsor my caffeine-fueled creativity.",
-      "Help me keep the lights on (and the Wi-Fi too).",
-      "Donations = less whining, more creating.",
-      "Your cash could save me from instant ramen dinners.",
-      "Donate and unlock my secret dance moves.",
-      "Support me, and I promise to stop bugging you (maybe).",
-      "Give generously, or face my bad jokes.",
-      "Help me pay for therapy... or pizza.",
-      "Donations make me do happy dances.",
-      "Keep me coding, not couch surfing.",
-      "Help me buy more snacks and less regrets.",
-      "Feed the coder, fuel the dreams.",
-      "Donate now or get bombarded with cat pictures.",
-      "Your support funds my epic snack stash.",
-      "Pay me so I can pay attention.",
-      "Donate or I'll start charging for smiles.",
-      "Help me avoid awkward day jobs.",
-      "Your donations are my motivation fuel.",
-      "I accept donations in hugs, laughs, and coins.",
-      "Donate to keep the creativity flowing (and the lights on).",
-      "Help me keep the server running... and my sanity too.",
-      "Donate and I’ll tell you a secret joke.",
-      "Your donation is my ‘keep going’ potion.",
-      "Support me and my collection of novelty socks.",
-      "Help me fund my ‘work from home in pajamas’ lifestyle.",
-      "Donate now — it’s cheaper than therapy.",
-      "Give me money, and I’ll give you gratitude.",
-      "Help me upgrade from instant noodles to fancy ramen.",
-      "Support me before my coffee runs out!",
-      "Your donations keep me fueled and funny.",
-      "Sponsor me and get exclusive bad jokes.",
-      "Donate or I’ll start charging you in dad jokes.",
-      "Help keep me weird and wonderful.",
-      "Give a little, get a lot of thanks (and memes).",
-      "Support the dream — donate today!"
-    ];
+    const btcModal = document.getElementById("btcModal");
+    const btcQR = document.getElementById("btcQR");
+    const btcAddrDisplay = document.getElementById("btcAddrDisplay");
+    const btcOptions = document.getElementById("btcOptions");
+    const btcQRView = document.getElementById("btcQRView");
 
-    const donationMsg = document.getElementById("donationMsg");
-    const clickMeText = document.getElementById("clickMeText");
+    const btcAddress = "bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr";
+    const lnAddress = "lnbc1p5gmeyvpp5uye35uglws0t3ggfaunv0qmvkw67ww4mg73f9r2trxq6n7jz2reqdqqcqzzsxqzjcsp5wkvwfk8jju2ntekt2puea9s7wutkc4unqy06tcz864dqs3rgqczq9qxpqysgqze75kd4vl4udzpv4e4pj8ngzexw5q589y86dw6c4jhr2kugys3rz6e4ygry2yrcayd0k29ux5nzlulr3kfh5aqf6mu49avyu5kvq4ggqwtgcrh";
 
-    function showRandomMessage() {
-      let newMsg;
-      do {
-        newMsg = messages[Math.floor(Math.random() * messages.length)];
-      } while (newMsg === donationMsg.textContent);
-      donationMsg.textContent = newMsg;
-    }
-
-    donationMsg.addEventListener("click", () => {
-      donationMsg.style.transition = "transform 0.1s ease";
-      donationMsg.style.transform = "scale(0.95)";
-      setTimeout(() => {
-        showRandomMessage();
-        donationMsg.style.transform = "scale(1.1)";
-        setTimeout(() => donationMsg.style.transform = "scale(1)", 100);
-      }, 100);
-      clickMeText.style.opacity = '0';
+    document.getElementById("bitcoinBtn").addEventListener("click", () => {
+      btcModal.style.display = "flex";
+      goBackToOptions();
     });
 
-    // Konami Code
-    const konamiCode = [
-      "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-      "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"
-    ];
-    let konamiPosition = 0;
+    function showBTCView(type) {
+      const qrUrl = type === "btc"
+        ? "https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_130936103.png?raw=true"
+        : "https://github.com/MuinainenBanaani/Roblox-Connections-To-Friends/blob/main/image_2025-08-02_131036264.png?raw=true";
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === konamiCode[konamiPosition].toLowerCase()) {
-        konamiPosition++;
-        if (konamiPosition === konamiCode.length) {
-          konamiPosition = 0;
-          triggerJumpscare();
-        }
-      } else {
-        konamiPosition = 0;
-      }
-    });
+      const address = type === "btc" ? btcAddress : lnAddress;
 
-    function triggerJumpscare() {
-      const overlay = document.createElement("div");
-      overlay.id = "jumpscareOverlay";
-      overlay.textContent = "KONAMI CODE ACTIVATED!!!";
-      document.body.appendChild(overlay);
+      btcQR.innerHTML = `<img src="${qrUrl}" alt="${type === 'btc' ? 'BTC' : 'Lightning'} QR Code" />`;
+      btcAddrDisplay.textContent = address;
 
-      const scream = new Audio("https://freesound.org/data/previews/608/608639_6341667-lq.wav");
-      scream.volume = 0.9;
-      scream.play();
-
-      setTimeout(() => overlay.remove(), 2500);
+      btcOptions.classList.remove("show");
+      btcQRView.classList.add("show");
     }
 
-    // PayPal popup center
+    function goBackToOptions() {
+      btcOptions.classList.add("show");
+      btcQRView.classList.remove("show");
+    }
+
+    // PayPal popup centering
     document.getElementById("paypalBtn").addEventListener("click", function(e) {
       e.preventDefault();
       const w = 500, h = 600;
@@ -329,18 +228,6 @@
       const top = (height - h) / 2 + dualScreenTop;
       const win = window.open(this.href, "paypalPopup", `scrollbars=yes,width=${w},height=${h},top=${top},left=${left}`);
       if (win?.focus) win.focus();
-    });
-
-    // Bitcoin copy
-    const bitcoinBtn = document.getElementById("bitcoinBtn");
-    const btcAddr = "bc1qr7rkpl7cm5t9m072m7rsmttvrx5vylc659nqkr";
-    bitcoinBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(btcAddr).then(() => {
-        bitcoinBtn.textContent = "Bitcoin Address Copied!";
-        setTimeout(() => {
-          bitcoinBtn.innerHTML = `<img src="https://raw.githubusercontent.com/MuinainenBanaani/Roblox-Connections-To-Friends/refs/heads/main/bitcoin_icon.png" alt="Bitcoin Icon" /> Bitcoin`;
-        }, 2000);
-      });
     });
   </script>
 </body>
