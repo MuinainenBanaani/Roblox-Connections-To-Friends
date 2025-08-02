@@ -21,6 +21,8 @@
       min-height: 100vh;
       text-align: center;
       padding: 0 20px;
+      position: relative;
+      overflow-x: hidden;
     }
 
     @keyframes bgShift {
@@ -39,9 +41,24 @@
     p {
       font-weight: 400;
       font-size: 1.25rem;
-      margin-bottom: 2em;
+      margin-bottom: 0.25em;
       max-width: 500px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    /* (click me) text below donation text */
+    #clickMeText {
+      font-size: 0.9rem;
+      color: gray;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+      user-select: none;
+      margin-top: 0.15em;
     }
 
     .buttons {
@@ -49,6 +66,7 @@
       gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 1.5rem;
     }
 
     .btn {
@@ -94,8 +112,8 @@
       position: fixed;
       top: 18px;
       right: 18px;
-      width: 60px;
-      height: 60px;
+      width: 66px;
+      height: 66px;
       cursor: pointer;
       border-radius: 12px;
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
@@ -103,26 +121,77 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
     .roblox-btn img {
-      width: 46px;
-      height: 46px;
+      width: 40px;
+      height: 40px;
       user-select: none;
+      object-fit: cover;
+      transform: scale(1.3);
+      border-radius: 12px;
     }
 
     .roblox-btn:hover {
       transform: scale(1.15);
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
     }
+
+    /* Bottom right konami message container */
+    #konamiContainer {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      text-align: right;
+      font-size: 0.85rem;
+      color: gray;
+      user-select: none;
+      max-width: 250px;
+      line-height: 1.3;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    #konamiCodeText {
+      font-family: monospace;
+      margin-top: 4px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    /* Jumpscare overlay */
+    #jumpscareOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: gray;
+      opacity: 0.9;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      font-size: 4rem;
+      font-weight: 900;
+      text-align: center;
+      user-select: none;
+      pointer-events: none;
+      text-shadow:
+        0 0 8px black,
+        0 0 15px black,
+        0 0 20px black;
+    }
   </style>
 </head>
 <body>
   <h1>Support My Work</h1>
-  <p>Your donations help me keep going! Choose your preferred way to donate below.</p>
+  <p id="donationMsg">Feed my coffee addiction one donation at a time.</p>
+  <div id="clickMeText">(click me)</div>
   
   <div class="buttons">
-    <!-- PayPal Button -->
     <a
       class="btn"
       href="https://www.paypal.com/paypalme/ToastCatten"
@@ -134,7 +203,6 @@
       PayPal
     </a>
 
-    <!-- Bitcoin Button -->
     <a
       class="btn"
       href="bitcoin:bc1qaa3r2ld5s8x556mpwu2g9wrxk9dnsyajetfcny"
@@ -149,7 +217,6 @@
 
   <footer>Thank you for your support! ❤️</footer>
 
-  <!-- Roblox Profile Button -->
   <a
     href="https://www.roblox.com/users/5309011509/profile"
     target="_blank"
@@ -159,5 +226,136 @@
   >
     <img src="https://i.ibb.co/ZR1gnvng/image-2025-08-02-023246503-modified.png" alt="Roblox Icon" />
   </a>
+
+  <div id="konamiContainer">
+    <div>don't try the konami code</div>
+    <div id="konamiCodeText">(Up, Up, Down, Down, Left, Right, Left, Right, B, A)</div>
+  </div>
+
+  <script>
+    const messages = [
+      "Feed my coffee addiction one donation at a time.",
+      "Your donation helps me avoid getting a real job.",
+      "Support me or I’ll start charging hugs.",
+      "Help me pay for my internet addiction, thanks!",
+      "Donate now or suffer eternal dad jokes.",
+      "Keep me caffeinated and code-happy — donate below!",
+      "Because even superheroes need pizza money.",
+      "Donations accepted in cookies and bitcoins.",
+      "Make me smile and my bank account too.",
+      "Help fund my next snack break.",
+      "Put your money where my memes are.",
+      "Your support makes me less broke and more awesome.",
+      "Donate or I’ll sing terribly for you.",
+      "Bribe me to keep making cool stuff.",
+      "Every donation counts — even the virtual high fives!",
+      "Sponsor my caffeine-fueled creativity.",
+      "Help me keep the lights on (and the Wi-Fi too).",
+      "Donations = less whining, more creating.",
+      "Your cash could save me from instant ramen dinners.",
+      "Donate and unlock my secret dance moves.",
+      "Support me, and I promise to stop bugging you (maybe).",
+      "Give generously, or face my bad jokes.",
+      "Help me pay for therapy... or pizza.",
+      "Donations make me do happy dances.",
+      "Keep me coding, not couch surfing.",
+      "Help me buy more snacks and less regrets.",
+      "Feed the coder, fuel the dreams.",
+      "Donate now or get bombarded with cat pictures.",
+      "Your support funds my epic snack stash.",
+      "Pay me so I can pay attention.",
+      "Donate or I'll start charging for smiles.",
+      "Help me avoid awkward day jobs.",
+      "Your donations are my motivation fuel.",
+      "I accept donations in hugs, laughs, and coins.",
+      "Donate to keep the creativity flowing (and the lights on).",
+      "Help me keep the server running... and my sanity too.",
+      "Donate and I’ll tell you a secret joke.",
+      "Your donation is my ‘keep going’ potion.",
+      "Support me and my collection of novelty socks.",
+      "Help me fund my ‘work from home in pajamas’ lifestyle.",
+      "Donate now — it’s cheaper than therapy.",
+      "Give me money, and I’ll give you gratitude.",
+      "Help me upgrade from instant noodles to fancy ramen.",
+      "Support me before my coffee runs out!",
+      "Your donations keep me fueled and funny.",
+      "Sponsor me and get exclusive bad jokes.",
+      "Donate or I’ll start charging you in dad jokes.",
+      "Help keep me weird and wonderful.",
+      "Give a little, get a lot of thanks (and memes).",
+      "Support the dream — donate today!"
+    ];
+
+    const donationMsg = document.getElementById("donationMsg");
+    const clickMeText = document.getElementById("clickMeText");
+
+    function showRandomMessage() {
+      let newMsg;
+      do {
+        newMsg = messages[Math.floor(Math.random() * messages.length)];
+      } while (newMsg === donationMsg.textContent);
+      donationMsg.textContent = newMsg;
+    }
+
+    donationMsg.addEventListener("click", () => {
+      donationMsg.style.transition = "transform 0.1s ease";
+      donationMsg.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        showRandomMessage();
+        donationMsg.style.transform = "scale(1.1)";
+        setTimeout(() => donationMsg.style.transform = "scale(1)", 100);
+      }, 100);
+
+      // Make (click me) translucent after first click
+      clickMeText.style.opacity = '0';
+    });
+
+    // KONAMI CODE
+    const konamiCode = [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a"
+    ];
+
+    let konamiPosition = 0;
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === konamiCode[konamiPosition].toLowerCase()) {
+        konamiPosition++;
+        if (konamiPosition === konamiCode.length) {
+          konamiPosition = 0;
+          triggerJumpscare();
+        }
+      } else {
+        konamiPosition = 0;
+      }
+    });
+
+    function triggerJumpscare() {
+      // Create overlay
+      const overlay = document.createElement("div");
+      overlay.id = "jumpscareOverlay";
+      overlay.textContent = "KONAMI CODE ACTIVATED!!!";
+      document.body.appendChild(overlay);
+
+      // Play scream sound
+      const screamAudio = new Audio('https://freesound.org/data/previews/608/608639_6341667-lq.wav');
+      screamAudio.volume = 0.9;
+      screamAudio.play();
+
+      setTimeout(() => {
+        if (overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+        }
+      }, 2500);
+    }
+  </script>
 </body>
 </html>
